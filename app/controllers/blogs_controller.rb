@@ -11,16 +11,14 @@ class BlogsController < ApplicationController
   end
 
   def show
-    if @blog.secret && current_user.blank? || @blog.secret && !@blog.owned_by?(current_user)
-      raise ActiveRecord::RecordNotFound
-    end
+    raise ActiveRecord::RecordNotFound if @blog.secret && current_user.blank? || @blog.secret && !@blog.owned_by?(current_user)
   end
 
   def new
     @blog = Blog.new
   end
 
-  def edit;end
+  def edit; end
 
   def create
     @blog = current_user.blogs.new(blog_params)
@@ -61,8 +59,6 @@ class BlogsController < ApplicationController
   end
 
   def editable?
-    unless @blog.owned_by?(current_user)
-      raise ActiveRecord::RecordNotFound
-    end
+    raise ActiveRecord::RecordNotFound unless @blog.owned_by?(current_user)
   end
 end
