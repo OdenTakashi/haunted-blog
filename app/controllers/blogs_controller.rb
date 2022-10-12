@@ -11,7 +11,7 @@ class BlogsController < ApplicationController
   end
 
   def show
-    if @blog.secret && current_user.blank? || @blog.secret && @blog.user_id != current_user.id
+    if @blog.secret && current_user.blank? || @blog.secret && !@blog.owned_by?(current_user)
       raise ActiveRecord::RecordNotFound
     end
   end
@@ -61,7 +61,7 @@ class BlogsController < ApplicationController
   end
 
   def editable?
-    unless @blog.user.id === current_user.id
+    unless @blog.owned_by?(current_user)
       raise ActiveRecord::RecordNotFound
     end
   end
