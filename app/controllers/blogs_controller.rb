@@ -11,7 +11,7 @@ class BlogsController < ApplicationController
   end
 
   def show
-    raise ActiveRecord::RecordNotFound unless @blog.secret && @blog.owned_by?(current_user)
+    raise ActiveRecord::RecordNotFound if @blog.secret && !@blog.owned_by?(current_user)
   end
 
   def new
