@@ -51,11 +51,9 @@ class BlogsController < ApplicationController
   end
 
   def blog_params
-    if current_user.premium
-      params.require(:blog).permit(:title, :content, :secret, :random_eyecatch)
-    else
-      params.require(:blog).permit(:title, :content, :secret)
-    end
+    parameters = %i[title content secret random_eyecatch]
+    parameters.delete(:random_eyecatch) if current_user.premium
+    params.require(:blog).permit(parameters)
   end
 
   def editable?
